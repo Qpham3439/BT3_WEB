@@ -55,3 +55,13 @@ Sử dụng Docker Compose để quản lý các container:
     └── assets/
         └── images/  
 ```
+-----------------------------------------------------------------------------------
+3. CÀI ĐẶT MÔI TRƯỜNG:
+
+Bước 1: Cài đặt Ubuntu:
+
+- Chạy PowerShell với quyền admin (Run as Administrator)
+- Gõ lệnh: _wsl --install_
+-> Hệ thống sẽ tự cài WSL và Ubuntu về máy:
+<img width="1507" height="782" alt="Screenshot 2025-11-04 184910" src="https://github.com/user-attachments/assets/6c336fe3-7f63-499a-a29d-d8ca7919b759" />
+- Khởi động lại máy.
