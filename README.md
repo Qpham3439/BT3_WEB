@@ -4,7 +4,7 @@ Giảng viên: Đỗ Duy Cốp
 
 Lớp học phần: 58KTP
 
-Sinh viên thực hiện: Nguyễn Như Khiêm
+Sinh viên thực hiện: Phạm Mạnh Quỳnh
 
 Chủ đề: Lập trình ứng dụng web thương mại điện tử trên nền Linux (Docker + Hyper-V + Ubuntu)
 
