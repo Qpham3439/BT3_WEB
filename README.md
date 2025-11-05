@@ -69,8 +69,10 @@ Bước 1: Cài đặt Ubuntu
 ```wsl --install -d Ubuntu```
 -> Hệ thống sẽ tự cài Ubuntu:
   <img width="1509" height="777" alt="Screenshot 2025-11-04 190220" src="https://github.com/user-attachments/assets/4e91171e-d120-4856-88df-93bbfe971c41" />
+  
 - Chạy lsb_release -a để xác nhận Ubuntu chạy.
 <img width="690" height="176" alt="Screenshot 2025-11-04 191107" src="https://github.com/user-attachments/assets/0a890555-2db9-4ffa-af09-adc8b3a5fc8e" />
+
 - chuyển đến thư mục chính:
 <img width="723" height="137" alt="Screenshot 2025-11-04 191319" src="https://github.com/user-attachments/assets/9c5b97d0-7839-4c3c-ad49-81ffb61643b1" />
 
