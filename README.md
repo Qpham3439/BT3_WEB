@@ -191,6 +191,7 @@ http {
 - nodered: phammanhquynh.com/nodered
 - grafana: phammanhquynh.com/grafana
 - phpMyadmin: phammanhquynh.com/phpmyadmin
+
 5. WEB FRONTEND + BACKEND:
 
 6. 
