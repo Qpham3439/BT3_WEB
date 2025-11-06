@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop Thời Trang - Fashion Boutique</title>
+  <style>
+    :root {
+      --main-color: #e91e63;
+      --accent-color: #ff8fab;
+      --bg-light: #fff5f8;
+      --text-dark: #333;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--main-color);
+      color: white;
+      padding: 14px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header .logo {
+      font-size: 1.5em;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    nav button {
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-left: 10px;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+    nav button:hover {
+      background: white;
+      color: var(--main-color);
+    }
+    nav button.hidden { display: none; }
+
+    /* ===== HERO / BANNER ===== */
+    .hero {
+      background: linear-gradient(to right, #ffc1cc, #ffe4e8);
+      text-align: center;
+      padding: 50px 20px;
+      border-bottom: 3px solid var(--accent-color);
+    }
+    .hero h1 {
+      font-size: 2.2em;
+      color: var(--main-color);
+    }
+    .hero p {
+      color: #555;
+      margin-top: 10px;
+      font-size: 1.1em;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    /* ===== LOGIN ===== */
+    #loginSection {
+      text-align: center;
+      background: white;
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    #loginSection h2 { color: var(--main-color); margin-bottom: 15px; }
+    #loginSection input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 30px;
+      border: 1px solid #ccc;
+    }
+    #loginSection button {
+      width: 100%;
+      background: var(--main-color);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #loginSection button:hover {
+      background: #c2185b;
+    }
+
+    /* ===== PRODUCT GRID ===== */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .product {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+    }
+    .product:hover {
+      transform: translateY(-5px);
+    }
+    .product img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .product h4 {
+      margin: 10px 0 5px;
+      color: var(--main-color);
+    }
+    .product p {
+      font-weight: bold;
+      color: #28a745;
+    }
+    .product button {
+      background: var(--accent-color);
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      margin: 10px 0 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .product button:hover { background: var(--main-color); }
+
+    /* ===== GROUP BUTTONS ===== */
+    #groups {
+      margin: 15px 0;
+      text-align: center;
+    }
+    #groups button {
+      background: #fce4ec;
+      border: 1px solid #f8bbd0;
+      color: var(--main-color);
+      border-radius: 20px;
+      padding: 8px 16px;
+      margin: 5px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    #groups button:hover {
+      background: var(--main-color);
+      color: white;
+    }
+
+    /* ===== CART ===== */
+    #cartSection {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .cart-item {
+      border-bottom: 1px solid #eee;
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-item input {
+      width: 60px;
+      padding: 5px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    .cart-item button {
+      background: var(--main-color);
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    #btnCheckout {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-size: 1em;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    #btnCheckout:hover { background: #218838; }
+
+    /* ===== ADMIN SECTION ===== */
+    .admin-section iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="logo">👗 Fashion Boutique</div>
+  <nav>
+    <button id="btnHome">Trang chủ</button>
+    <button id="btnCart">Giỏ hàng</button>
+    <button id="btnAdmin" class="hidden">Quản trị</button>
+    <button id="btnLogout" class="hidden">Đăng xuất</button>
+  </nav>
+</header>
+
+<div class="hero">
+  <h1>Chào mừng đến với Fashion Boutique</h1>
+  <p>Khám phá bộ sưu tập mới nhất – Đẳng cấp, tinh tế và phong cách.</p>
+</div>
+
+<div class="container">
+  <!-- LOGIN -->
+  <section id="loginSection">
+    <h2>Đăng nhập</h2>
+    <input type="text" id="username" placeholder="Tên đăng nhập">
+    <input type="password" id="password" placeholder="Mật khẩu">
+    <button id="btnLogin">Đăng nhập</button>
+    <p id="loginMsg"></p>
+  </section>
+
+  <!-- HOME -->
+  <section id="homeSection" class="hidden">
+    <h2>✨ Sản phẩm nổi bật</h2>
+    <div id="hotProducts" class="product-grid"></div>
+
+    <h3>Danh mục sản phẩm</h3>
+    <div id="groups"></div>
+
+    <h3>Tất cả sản phẩm</h3>
+    <input type="text" id="searchBox" placeholder="Tìm kiếm áo, váy, túi xách...">
+    <div id="productList" class="product-grid"></div>
+  </section>
+
+  <!-- CART -->
+  <section id="cartSection" class="hidden">
+    <h2>🛒 Giỏ hàng</h2>
+    <div id="cartItems"></div>
+    <p><strong>Tổng tiền:</strong> <span id="cartTotal">0</span>đ</p>
+    <h3>Thông tin giao hàng</h3>
+    <input id="shipName" placeholder="Họ tên người nhận">
+    <input id="shipPhone" placeholder="Số điện thoại">
+    <input id="shipAddr" placeholder="Địa chỉ giao hàng">
+    <button id="btnCheckout">Xác nhận đặt hàng</button>
+    <p id="checkoutMsg"></p>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="adminSection" class="hidden admin-section">
+    <h2>📈 Thống kê doanh số</h2>
+    <iframe src="http://localhost:3000/d-solo/adq2t9t/tnh-trng-bn-hng?orgId=1&panelId=panel-1&from=now-7d&to=now&timezone=browser"></iframe>
+    <iframe src="http://localhost:3000/d-solo/adq2t9t/tnh-trng-bn-hng?orgId=1&panelId=panel-2&from=now-7d&to=now&timezone=browser"></iframe>
+  </section>
+</div>
+
+<script>
+const API_BASE = '/nodered/api';
+let sessionToken = getCookie('session_token') || '';
+let currentUser = null;
+let cart = [];
+
+function getCookie(name){ const m=document.cookie.match(new RegExp('(^| )'+name+'=([^;]+)')); return m?m[2]:''; }
+function setCookie(n,v,d){const t=new Date();t.setTime(t.getTime()+d*24*60*60*1000);document.cookie=`${n}=${v};expires=${t.toUTCString()};path=/`; }
+function show(id){['loginSection','homeSection','cartSection','adminSection'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');}
+
+async function apiGet(p){const r=await fetch(API_BASE+p,{headers:{'X-Session-Token':sessionToken}});return r.json();}
+async function apiPost(p,d){const r=await fetch(API_BASE+p,{method:'POST',headers:{'Content-Type':'application/json','X-Session-Token':sessionToken},body:JSON.stringify(d)});return r.json();}
+
+async function init(){
+  if(sessionToken){
+    try{const r=await apiGet('/check');if(r.success){currentUser=r.user;onLogin();return;}}catch(e){}
+  }
+  show('loginSection');
+}
+async function onLogin(){
+  document.getElementById('btnLogout').classList.remove('hidden');
+  document.getElementById('btnAdmin').classList.toggle('hidden',!currentUser.is_admin);
+  show('homeSection');loadHome();
+}
+document.getElementById('btnLogin').onclick=async()=>{
+  const username=document.getElementById('username').value;
+  const password=document.getElementById('password').value;
+  const res=await apiPost('/login',{username,password_hash:password});
+  const msg=document.getElementById('loginMsg');
+  if(res.success){sessionToken=res.token;setCookie('session_token',sessionToken,3);currentUser=res.user;msg.textContent='Đăng nhập thành công!';onLogin();}
+  else msg.textContent='Sai thông tin đăng nhập.';
+};
+document.getElementById('btnLogout').onclick=()=>{setCookie('session_token','',-1);sessionToken='';currentUser=null;location.reload();}
+document.getElementById('btnHome').onclick=()=>show('homeSection');
+document.getElementById('btnCart').onclick=()=>renderCart();
+document.getElementById('btnAdmin').onclick=()=>show('adminSection');
+
+document.getElementById('btnCheckout').onclick=async()=>{
+  if(cart.length===0){alert('Giỏ hàng trống');return;}
+  const order={customer_name:shipName.value,phone:shipPhone.value,address:shipAddr.value,items:cart};
+  if(currentUser?.id)order.user_id=currentUser.id;
+  const res=await apiPost('/orders',order);
+  checkoutMsg.textContent=res.success?'Đặt hàng thành công! Mã đơn: '+res.order_id:'Lỗi đặt hàng!';
+  if(res.success){cart=[];show('homeSection');loadHome();}
+};
+
+async function loadHome(){
+  const hot=await apiGet('/hot');const groups=await apiGet('/groups');const products=await apiGet('/products');
+  renderProducts('hotProducts',hot.products||hot);
+  renderGroups(groups.groups||groups);
+  renderProducts('productList',products.products||products);
+}
+function renderGroups(groups){
+  groupsDiv.innerHTML='';groups.forEach(g=>{const b=document.createElement('button');b.textContent=g.name;b.onclick=()=>loadProductsByGroup(g.id);groupsDiv.appendChild(b);});
+}
+async function loadProductsByGroup(id){const r=await apiGet('/products?group='+id);renderProducts('productList',r.products||r);}
+function renderProducts(id,list){
+  const div=document.getElementById(id);div.innerHTML='';
+  list.forEach(p=>{
+    const el=document.createElement('div');el.className='product';
+    el.innerHTML=`<img src="${p.image||'https://via.placeholder.com/250x250?text=Fashion'}"><h4>${p.name}</h4><p>${p.price}đ</p><button>Thêm vào giỏ</button>`;
+    el.querySelector('button').onclick=()=>{const ex=cart.find(c=>c.product_id===p.id);if(ex)ex.qty++;else cart.push({...p,qty:1});alert('Đã thêm vào giỏ');};
+    div.appendChild(el);
+  });
+}
+searchBox.oninput=async(e)=>{const kw=e.target.value.trim();const r=await apiGet('/products?search='+encodeURIComponent(kw));renderProducts('productList',r.products||r);}
+function renderCart(){
+  show('cartSection');cartItems.innerHTML='';let total=0;
+  cart.forEach((c,i)=>{total+=c.qty*c.price;const el=document.createElement('div');el.className='cart-item';
+    el.innerHTML=`${c.name} - ${c.price}đ x <input type='number' min='1' value='${c.qty}'> <button>Xóa</button>`;
+    el.querySelector('input').onchange=(ev)=>{c.qty=Number(ev.target.value);renderCart();};
+    el.querySelector('button').onclick=()=>{cart.splice(i,1);renderCart();};
+    cartItems.appendChild(el);
+  });
+  cartTotal.textContent=total.toLocaleString();
+}
+
+init();
+</script>
+</body>
+</html>

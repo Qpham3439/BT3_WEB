@@ -1,0 +1,934 @@
+[
+    {
+        "id": "45a3fd837a8169db",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "mysql-config",
+        "type": "MySQLdatabase",
+        "name": "MariaDB",
+        "host": "mariadb_1",
+        "port": "3310",
+        "db": "appdb",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "134aa5949a6e37ee",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "mariadb_1",
+        "port": "3310",
+        "db": "appdb",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "1a5d4f82633b84a6",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "mariadb",
+        "port": "3306",
+        "db": "appdb",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "7789bd3a86215c3e",
+        "type": "http response",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 790,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "f5e981c5b81da6be",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 550,
+        "y": 200,
+        "wires": [
+            [
+                "7789bd3a86215c3e"
+            ]
+        ]
+    },
+    {
+        "id": "3526f68e337ae937",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/products",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 200,
+        "wires": [
+            [
+                "6b27beeb11c9b094"
+            ]
+        ]
+    },
+    {
+        "id": "6b27beeb11c9b094",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 1",
+        "func": "const q = (msg.req.query && msg.req.query.q) ? msg.req.query.q.trim() : '';\nconst group = (msg.req.query && msg.req.query.group) ? msg.req.query.group.trim() : '';\n\nlet sql = \"SELECT id, name, price, group_id, sold_count, COALESCE(description,'') as description FROM products\";\nlet where = [];\nif(group){\n  const gid = parseInt(group);\n  if(!isNaN(gid)) where.push(\"group_id = \" + gid);\n}\nif(q){\n  const safe = q.replace(/'/g,\"''\");\n  where.push(\"(name LIKE '%\"+safe+\"%' OR COALESCE(description,'') LIKE '%\"+safe+\"%')\");\n}\nif(where.length) sql += \" WHERE \" + where.join(\" AND \");\nsql += \" ORDER BY sold_count DESC, id DESC\";\nmsg.topic = sql;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 200,
+        "wires": [
+            [
+                "f5e981c5b81da6be"
+            ]
+        ]
+    },
+    {
+        "id": "19f94ef28c104854",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/groups",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 260,
+        "wires": [
+            [
+                "9f1cec1c029e08dd"
+            ]
+        ]
+    },
+    {
+        "id": "9f1cec1c029e08dd",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 2",
+        "func": "msg.topic = \"SELECT id, name FROM product_groups ORDER BY name\";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 260,
+        "wires": [
+            [
+                "f5e981c5b81da6be"
+            ]
+        ]
+    },
+    {
+        "id": "f912f0f5f7d6a6f8",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/hot",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "4e2ae8881732013c"
+            ]
+        ]
+    },
+    {
+        "id": "4e2ae8881732013c",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 3",
+        "func": "msg.topic = \"SELECT id, name, price, sold_count FROM products ORDER BY sold_count DESC LIMIT 10\";\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 140,
+        "wires": [
+            [
+                "f5e981c5b81da6be"
+            ]
+        ]
+    },
+    {
+        "id": "fd4a7e601fc2d195",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/login",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 440,
+        "wires": [
+            [
+                "d4b35080e12ade7d"
+            ]
+        ]
+    },
+    {
+        "id": "3218dc214bfa317a",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 490,
+        "y": 440,
+        "wires": [
+            [
+                "0360d8212d6e99e8",
+                "18ef7bba30d0f841"
+            ]
+        ]
+    },
+    {
+        "id": "d4b35080e12ade7d",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 4",
+        "func": "// expects JSON body: { username, password_hash }\nconst body = msg.req.body || msg.payload || {};\nconst u = (body.username || '').replace(/'/g, \"''\");\nmsg._password_hash = body.password_hash || '';\nmsg.topic = `SELECT id, username, password_hash, is_admin FROM users WHERE username='${u}' LIMIT 1`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 440,
+        "wires": [
+            [
+                "3218dc214bfa317a"
+            ]
+        ]
+    },
+    {
+        "id": "18ef7bba30d0f841",
+        "type": "debug",
+        "z": "45a3fd837a8169db",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "0c90ea4dd6fbc9eb",
+        "type": "http response",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 1030,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "0360d8212d6e99e8",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 5",
+        "func": "const rows = msg.payload || [];\nconst supplied = msg._password_hash || (msg.req.body && msg.req.body.password_hash) || '';\n\nif (!rows || rows.length === 0) {\n  msg.statusCode = 401;\n  msg.payload = { success:false, message:'Invalid username or password' };\n  return msg;\n}\n\nconst user = rows[0];\nif (user.password_hash !== supplied) {\n  msg.statusCode = 401;\n  msg.payload = { success:false, message:'Invalid username or password' };\n  return msg;\n}\n\n// Lưu user để dùng ở bước sau\nmsg._user = { id: user.id, username: user.username, is_admin: user.is_admin };\n\n// gửi xuống node UUID để sinh token\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 440,
+        "wires": [
+            [
+                "e66e8d99306d9baa",
+                "2c4a11647226ef5c"
+            ]
+        ]
+    },
+    {
+        "id": "1379793ed29bca6e",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 6",
+        "func": "const token = msg.payload; // token từ UUID node\nconst user = msg._user;\n\n// lưu token lại để func4 dùng\nmsg._token = token;\n\n// tạo câu lệnh SQL insert\nmsg.topic = `INSERT INTO sessions (token, user_id) VALUES ('${token}', ${user.id})`;\n\n// payload cho node mysql\nmsg.payload = {};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 620,
+        "wires": [
+            [
+                "e90c8c14655c853b"
+            ]
+        ]
+    },
+    {
+        "id": "87b1f52ccd3cce83",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/check",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 720,
+        "wires": [
+            [
+                "1106776f0656b64b"
+            ]
+        ]
+    },
+    {
+        "id": "1106776f0656b64b",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 7",
+        "func": "// lấy token từ header hoặc cookie\nlet token = '';\nif (msg.req && msg.req.headers['x-session-token']) {\n    token = msg.req.headers['x-session-token'];\n} else if (msg.req && msg.req.cookies && msg.req.cookies.session_token) {\n    token = msg.req.cookies.session_token;\n}\n\n// nếu không có token\nif (!token) {\n    msg.statusCode = 401;\n    msg.payload = { success: false, message: 'No token provided' };\n    return msg;\n}\n\n// tránh SQL injection\nconst safeToken = token.replace(/'/g, \"''\");\n\n// tạo câu truy vấn\nmsg.topic = `\n  SELECT s.token, s.user_id, u.username, u.is_admin\n  FROM sessions s\n  JOIN users u ON s.user_id = u.id\n  WHERE s.token='${safeToken}'\n  LIMIT 1\n`;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 720,
+        "wires": [
+            [
+                "35bfa35ae3d64eba"
+            ]
+        ]
+    },
+    {
+        "id": "35a03efe325bc520",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 8",
+        "func": "const rows = msg.payload || [];\n\nif (!rows || rows.length === 0) {\n    msg.statusCode = 401;\n    msg.payload = { success: false, message: 'Invalid or expired session' };\n    return msg;\n}\n\nconst r = rows[0];\nmsg.statusCode = 200;\nmsg.payload = {\n    success: true,\n    user: {\n        id: r.user_id,\n        username: r.username,\n        is_admin: !!r.is_admin\n    }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 720,
+        "wires": [
+            [
+                "d26978ca96c47836"
+            ]
+        ]
+    },
+    {
+        "id": "35bfa35ae3d64eba",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 490,
+        "y": 720,
+        "wires": [
+            [
+                "35a03efe325bc520"
+            ]
+        ]
+    },
+    {
+        "id": "d26978ca96c47836",
+        "type": "http response",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 830,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "ec3d97a01fbfb6e0",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/admin/orders",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 160,
+        "y": 920,
+        "wires": [
+            [
+                "b3b85bc2e7220388"
+            ]
+        ]
+    },
+    {
+        "id": "b3b85bc2e7220388",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 9",
+        "func": "// lấy token\nlet token = msg.req?.headers['x-session-token'] || '';\nif (!token) {\n  msg.statusCode = 401;\n  msg.payload = { success: false, message: 'No session token' };\n  return msg;\n}\nconst safeToken = token.replace(/'/g, \"''\");\n\n// truy vấn để kiểm tra quyền admin\nmsg.topic = `\n  SELECT u.id, u.username, u.is_admin\n  FROM sessions s\n  JOIN users u ON s.user_id = u.id\n  WHERE s.token='${safeToken}'\n  LIMIT 1\n`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 920,
+        "wires": [
+            [
+                "5e0a45ead15b8a91"
+            ]
+        ]
+    },
+    {
+        "id": "2ac72082842c7c4e",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 10",
+        "func": "const rows = msg.payload || [];\nif (!rows || rows.length === 0) {\n  msg.statusCode = 401;\n  msg.payload = { success: false, message: 'Invalid session' };\n  return msg;\n}\nconst user = rows[0];\nif (!user.is_admin) {\n  msg.statusCode = 403;\n  msg.payload = { success: false, message: 'Access denied' };\n  return msg;\n}\n\n// truy vấn toàn bộ đơn hàng\nmsg.topic = `\n  SELECT o.id AS order_id, o.customer_name, o.phone, o.address, o.total,\n         o.status, o.created_at,\n         oi.product_id, oi.qty, oi.price,\n         p.name AS product_name\n  FROM orders o\n  LEFT JOIN order_items oi ON oi.order_id = o.id\n  LEFT JOIN products p ON p.id = oi.product_id\n  ORDER BY o.created_at DESC, o.id DESC\n`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 920,
+        "wires": [
+            [
+                "4358872dcf48c763"
+            ]
+        ]
+    },
+    {
+        "id": "5e0a45ead15b8a91",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 350,
+        "y": 1000,
+        "wires": [
+            [
+                "2ac72082842c7c4e"
+            ]
+        ]
+    },
+    {
+        "id": "b19c6b8e0fff93f3",
+        "type": "http response",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 950,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "e66e8d99306d9baa",
+        "type": "debug",
+        "z": "45a3fd837a8169db",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "e90c8c14655c853b",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 890,
+        "y": 440,
+        "wires": [
+            [
+                "33c1754d16a8bd35"
+            ]
+        ]
+    },
+    {
+        "id": "33c1754d16a8bd35",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 12",
+        "func": "// func4: set cookie + trả response\nconst token = msg._token || msg.token || msg.payload.token;\nconst user = msg._user;\n\n// nếu có đối tượng response (Node-RED >= 3.1)\nif (msg.res && msg.res.cookie) {\n    msg.res.cookie('session_token', token, {\n        httpOnly: false,  // cho phép JS đọc cookie\n        path: '/',\n        maxAge: 3 * 24 * 60 * 60 * 1000 // 3 ngày\n    });\n} else {\n    // fallback: dùng header Set-Cookie cho Node-RED cũ\n    msg.headers = {\n        'Set-Cookie': `session_token=${token}; Path=/; Max-Age=${3 * 24 * 60 * 60}`\n    };\n}\n\n// gửi payload JSON cho client\nmsg.statusCode = 200;\nmsg.payload = {\n    success: true,\n    token: token,\n    user: user\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 520,
+        "wires": [
+            [
+                "0c90ea4dd6fbc9eb"
+            ]
+        ]
+    },
+    {
+        "id": "4358872dcf48c763",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 630,
+        "y": 1000,
+        "wires": [
+            [
+                "e4fa4203af62e4bd"
+            ]
+        ]
+    },
+    {
+        "id": "e4fa4203af62e4bd",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 13",
+        "func": "const rows = msg.payload || [];\nif (!rows || rows.length === 0) {\n    msg.payload = { success: true, orders: [] };\n    return msg;\n}\n\nconst orders = {};\nrows.forEach(r => {\n    if (!orders[r.order_id]) {\n        orders[r.order_id] = {\n            id: r.order_id,\n            customer_name: r.customer_name,\n            phone: r.phone,\n            address: r.address,\n            total: r.total,\n            status: r.status,\n            created_at: r.created_at,\n            items: []\n        };\n    }\n    orders[r.order_id].items.push({\n        product_id: r.product_id,\n        product_name: r.product_name,\n        qty: r.qty,\n        price: r.price\n    });\n});\n\nmsg.payload = { success: true, orders: Object.values(orders) };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 920,
+        "wires": [
+            [
+                "b19c6b8e0fff93f3"
+            ]
+        ]
+    },
+    {
+        "id": "6346b19e7bb6410a",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/orders",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 1140,
+        "wires": [
+            [
+                "ee8be273a7e0b513"
+            ]
+        ]
+    },
+    {
+        "id": "ee8be273a7e0b513",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 11",
+        "func": "const order = msg.req.body || {};\nif (!order.items || !Array.isArray(order.items) || order.items.length === 0) {\n  msg.statusCode = 400;\n  msg.payload = { success: false, message: 'Không có sản phẩm trong đơn hàng' };\n  return msg;\n}\n\n// Lấy token từ header\nlet token = msg.req.headers['x-session-token'] || '';\nif (!token) {\n  msg.statusCode = 401;\n  msg.payload = { success: false, message: 'Thiếu token xác thực' };\n  return msg;\n}\ntoken = token.replace(/'/g, \"''\");\n\n// Query kiểm tra user theo token\nmsg.topic = `\n  SELECT u.id, u.username, u.is_admin\n  FROM sessions s \n  JOIN users u ON s.user_id = u.id \n  WHERE s.token='${token}' \n  LIMIT 1\n`;\n\nmsg._order = order;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 1140,
+        "wires": [
+            [
+                "6f73561d4c3d7cc3"
+            ]
+        ]
+    },
+    {
+        "id": "e2e76deaeba54c45",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 12",
+        "func": "const rows = msg.payload || [];\nif (!rows || rows.length === 0) {\n    msg.statusCode = 401;\n    msg.payload = { success: false, message: 'Token không hợp lệ hoặc hết hạn' };\n    return msg;\n}\n\nconst user = rows[0];\nconst order = msg._order;\n\nconst name = (order.customer_name || '').replace(/'/g, \"''\");\nconst phone = (order.phone || '').replace(/'/g, \"''\");\nconst addr = (order.address || '').replace(/'/g, \"''\");\n\n// Tính tổng tiền\nconst total = order.items.reduce((sum, i) => sum + (i.price * i.qty), 0);\n\nmsg.topic = `\n  INSERT INTO orders (user_id, customer_name, phone, address, total)\n  VALUES (${user.id}, '${name}', '${phone}', '${addr}', ${total})\n`;\n\nmsg._user = user;\nmsg._order = order;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 1140,
+        "wires": [
+            [
+                "3af91e6a9114b177"
+            ]
+        ]
+    },
+    {
+        "id": "16add8751f4f2b9f",
+        "type": "http response",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 980,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "3af91e6a9114b177",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 530,
+        "y": 1220,
+        "wires": [
+            [
+                "027bc981785e5555"
+            ]
+        ]
+    },
+    {
+        "id": "0238410d57541f6f",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 13",
+        "func": "msg.statusCode = 200;\nmsg.payload = {\n    success: true,\n    order_id: msg._order_id,\n    message: 'Đặt hàng thành công!'\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 1140,
+        "wires": [
+            [
+                "16add8751f4f2b9f"
+            ]
+        ]
+    },
+    {
+        "id": "c085ee20874f9469",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/stats/sales",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 170,
+        "y": 1800,
+        "wires": [
+            [
+                "abcb022b411f98a3"
+            ]
+        ]
+    },
+    {
+        "id": "0bdfc1da8f2a1ea8",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 550,
+        "y": 1800,
+        "wires": [
+            [
+                "905ab208e74620b3"
+            ]
+        ]
+    },
+    {
+        "id": "abcb022b411f98a3",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 14",
+        "func": "msg.topic = `\n  SELECT \n    DATE(o.created_at) AS Ngay,\n    SUM(oi.qty) AS SoLuong,\n    SUM(oi.qty * oi.price) AS DoanhThu\n  FROM orders o\n  JOIN order_items oi ON o.id = oi.order_id\n  GROUP BY DATE(o.created_at)\n  ORDER BY Ngay ASC\n`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 1800,
+        "wires": [
+            [
+                "0bdfc1da8f2a1ea8"
+            ]
+        ]
+    },
+    {
+        "id": "905ab208e74620b3",
+        "type": "http response",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 750,
+        "y": 1800,
+        "wires": []
+    },
+    {
+        "id": "a1ac71b10c5bbf42",
+        "type": "http in",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "url": "/api/user/orders",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 1500,
+        "wires": [
+            [
+                "810f25c7daebb97e"
+            ]
+        ]
+    },
+    {
+        "id": "810f25c7daebb97e",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 15",
+        "func": "let token = msg.req?.headers['x-session-token'] || '';\nif (!token) {\n  msg.statusCode = 401;\n  msg.payload = { success:false, message:'No session token' };\n  return msg;\n}\nconst safeToken = token.replace(/'/g,\"''\");\n\nmsg.topic = `\n  SELECT s.user_id, u.username, u.is_admin\n  FROM sessions s\n  JOIN users u ON s.user_id = u.id\n  WHERE s.token='${safeToken}'\n  LIMIT 1\n`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 1500,
+        "wires": [
+            [
+                "a3045686fd41f1aa"
+            ]
+        ]
+    },
+    {
+        "id": "156c37db51040978",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 16",
+        "func": "const rows = msg.payload || [];\nif (!rows || rows.length === 0) {\n  msg.statusCode = 401;\n  msg.payload = { success:false, message:'Invalid session' };\n  return msg;\n}\n\nconst user = rows[0];\nif (user.is_admin) {\n  msg.statusCode = 403;\n  msg.payload = { success:false, message:'Access denied for admin' };\n  return msg;\n}\n\nmsg.topic = `\n  SELECT o.id AS order_id, o.customer_name, o.phone, o.address, o.total,\n         o.status, o.created_at,\n         oi.product_id, oi.qty, oi.price,\n         p.name AS product_name\n  FROM orders o\n  LEFT JOIN order_items oi ON oi.order_id = o.id\n  LEFT JOIN products p ON p.id = oi.product_id\n  WHERE o.user_id = ${user.user_id}\n  ORDER BY o.created_at DESC, o.id DESC\n`;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 1500,
+        "wires": [
+            [
+                "37e719ab07ac4454",
+                "0bc2a9e3bdd9cc5e"
+            ]
+        ]
+    },
+    {
+        "id": "a3045686fd41f1aa",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 360,
+        "y": 1580,
+        "wires": [
+            [
+                "156c37db51040978"
+            ]
+        ]
+    },
+    {
+        "id": "48f4085f3281319b",
+        "type": "http response",
+        "z": "45a3fd837a8169db",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 960,
+        "y": 1580,
+        "wires": []
+    },
+    {
+        "id": "37e719ab07ac4454",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 640,
+        "y": 1580,
+        "wires": [
+            [
+                "c0de18793ea79c22",
+                "4379a2a5a973cc36"
+            ]
+        ]
+    },
+    {
+        "id": "c0de18793ea79c22",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 17",
+        "func": "const rows = msg.payload || [];\nif (!rows || rows.length === 0) {\n    msg.payload = { success: true, orders: [] };\n    return msg;\n}\n\nconst orders = {};\nrows.forEach(r => {\n    if (!orders[r.order_id]) {\n        orders[r.order_id] = {\n            id: r.order_id,\n            customer_name: r.customer_name,\n            phone: r.phone,\n            address: r.address,\n            total: r.total,\n            status: r.status,\n            created_at: r.created_at,\n            items: []\n        };\n    }\n    orders[r.order_id].items.push({\n        product_id: r.product_id,\n        product_name: r.product_name,\n        qty: r.qty,\n        price: r.price\n    });\n});\n\nmsg.payload = { success: true, orders: Object.values(orders) };\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 1500,
+        "wires": [
+            [
+                "48f4085f3281319b"
+            ]
+        ]
+    },
+    {
+        "id": "0bc2a9e3bdd9cc5e",
+        "type": "debug",
+        "z": "45a3fd837a8169db",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 1680,
+        "wires": []
+    },
+    {
+        "id": "4379a2a5a973cc36",
+        "type": "debug",
+        "z": "45a3fd837a8169db",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 1680,
+        "wires": []
+    },
+    {
+        "id": "6f73561d4c3d7cc3",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 310,
+        "y": 1220,
+        "wires": [
+            [
+                "e2e76deaeba54c45"
+            ]
+        ]
+    },
+    {
+        "id": "027bc981785e5555",
+        "type": "function",
+        "z": "45a3fd837a8169db",
+        "name": "function 18",
+        "func": "const insertResult = msg.payload;\nconst orderId = insertResult.insertId;\nconst order = msg._order;\n\nif (!orderId) {\n    msg.statusCode = 500;\n    msg.payload = { success: false, message: 'Không tạo được đơn hàng' };\n    return msg;\n}\n\n// Sinh query multi insert cho order_items\nconst values = order.items.map(i =>\n  `(${orderId}, ${i.product_id}, ${i.qty}, ${i.price})`\n).join(',');\n\nmsg.topic = `\n  INSERT INTO order_items (order_id, product_id, qty, price)\n  VALUES ${values}\n`;\n\nmsg._order_id = orderId;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 1140,
+        "wires": [
+            [
+                "3b67ac5e2bfef1dd"
+            ]
+        ]
+    },
+    {
+        "id": "3b67ac5e2bfef1dd",
+        "type": "mysql",
+        "z": "45a3fd837a8169db",
+        "mydb": "1a5d4f82633b84a6",
+        "name": "",
+        "x": 710,
+        "y": 1220,
+        "wires": [
+            [
+                "0238410d57541f6f"
+            ]
+        ]
+    },
+    {
+        "id": "2c4a11647226ef5c",
+        "type": "uuid",
+        "z": "45a3fd837a8169db",
+        "uuidVersion": "v4",
+        "namespaceType": "",
+        "namespace": "",
+        "namespaceCustom": "",
+        "name": "Generate Token",
+        "field": "payload",
+        "fieldType": "msg",
+        "x": 700,
+        "y": 520,
+        "wires": [
+            [
+                "1379793ed29bca6e"
+            ]
+        ]
+    }
+]

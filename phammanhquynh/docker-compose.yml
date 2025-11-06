@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user123
+    volumes:
+      - ./data/mariadb_1:/var/lib/mysql   
+    ports:
+      - "3310:3310"
+  
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin_1
+    restart: always
+    environment:
+      PMA_HOST: mariadb_1  
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8082:80"
+    depends_on:
+      - mariadb
+
+  nodered:
+    image: nodered/node-red:latest
+    container_name: nodered_1
+    restart: always
+    ports:
+      - "1882:1880"
+    volumes:
+      - ./data/nodered_1:/data
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb_1
+    restart: always
+    ports:
+      - "8088:8086"
+    volumes:
+      - ./data/influxdb_1:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana_1
+    restart: always
+    ports:
+      - "3002:3000"
+    depends_on:
+      - influxdb
+    volumes:
+      - ./data/grafana_1:/var/lib/grafana
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_1
+    restart: always
+    ports:
+      - "82:80"
+      - "446:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./web:/usr/share/nginx/html:ro
+    depends_on:
+      - nodered
+      - grafana
