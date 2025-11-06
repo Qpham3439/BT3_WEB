@@ -19,6 +19,8 @@ Sử dụng Docker Compose để quản lý các container:
 - grafana – hiển thị thống kê sản phẩm bán chạy
 - influxdb – lưu lịch sử thống kê (nếu cần)
 - nginx – web server reverse proxy
+- Ghi chú: trong bài dùng các cổng có khác so với yêu cầu.
+- lý do: do dùng chung máy để chạy cho nên các cổng không thể trùng nhau, nên phải thay đổi cổng để chương trình có thể chạy.
 -----------------------------------------------------------------------------------
 2. CÀI ĐẶT MÔI TRƯỜNG:
 
@@ -185,4 +187,10 @@ http {
 }
 
 ```
-5. 
+- website: phammanhquynh.com
+- nodered: phammanhquynh.com/nodered
+- grafana: phammanhquynh.com/grafana
+- phpMyadmin: phammanhquynh.com/phpmyadmin
+5. WEB FRONTEND + BACKEND:
+
+6. 
