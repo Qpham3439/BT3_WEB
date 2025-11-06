@@ -193,5 +193,26 @@ http {
 - phpMyadmin: phammanhquynh.com/phpmyadmin
 
 5. WEB FRONTEND + BACKEND:
+- nodered:
+![z7197136454628_89bcf048686e6a9e26796e999fd38333](https://github.com/user-attachments/assets/56917596-5f3e-4c11-9f1b-323c61ca923b)
+![z7197136455675_8d0c7f2270321e46693c842d2478671e](https://github.com/user-attachments/assets/28628a69-76a9-4048-ad47-f00e15b39e15)
+![z7197136454537_6439d62cfeb5aab9463caf092a1a8bed](https://github.com/user-attachments/assets/d2a73933-b472-4497-a59a-d2efc15404fe)
 
-6. 
+- Database:
+![z7197137237331_29bdad8890b09e14d17a7df6f04a81d9](https://github.com/user-attachments/assets/fcf4d97b-7eb5-44b9-bf99-a0fe4dba197d)
+![z7197137377983_0bec30a2a368fa5c7d07a8958ac0ceee](https://github.com/user-attachments/assets/a43ada98-9375-40f2-b432-e2715f5c4f2a)
+
+- test website:
+![z7197135327339_c3ba7e827abced545bb08ec4c39a5f30](https://github.com/user-attachments/assets/817e8b8f-46b3-4082-b868-cd9cf46f2b92)
+![z7197135118928_1923be32d79b36ba1ea2782e7776c410](https://github.com/user-attachments/assets/661b8798-ebb9-4b88-8983-ff39d3064502)
+![z7197135277420_c41e794ccc257646874f8cb4ad057fd6](https://github.com/user-attachments/assets/c859095f-ea93-4279-8f46-fe0621f316e3)
+
+
+6. KẾT LUẬN
+
+Qua bài này, em đã:
+
+- Tự cài đặt và cấu hình Docker trên Ubuntu (chạy trong Hyper-V)
+- Sử dụng docker-compose quản lý nhiều dịch vụ
+- Xây dựng web SPA đầy đủ frontend – backend – database – giám sát
+- Hiểu rõ cách kết nối Nginx reverse proxy và Node-RED API
